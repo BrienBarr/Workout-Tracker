@@ -16,7 +16,7 @@ router.get("/api/workouts", (req, res) => {
 // router.get("/exercise/?:id", (req, res) => {
 //   Workout.findOne(
 //     {
-//     _id: mongojs.ObjectId(req.params.id)
+//     _id: req.params.id
 //     }
 //   )
 //   .then(dbWorkout => {
@@ -28,13 +28,11 @@ router.get("/api/workouts", (req, res) => {
 // });
 
 router.put("/api/workouts/:id", (req, res) => {
-  Workout.findOneAndUpdate(
+  Workout.update(
     {
-      _id: mongojs.ObjectId(req.params.id)
+      _id: req.params.id
     },
-    {
-      $set: { body }
-    }
+    req.body
   )
   .then(dbWorkout => {
     res.json(dbWorkout);
@@ -44,14 +42,14 @@ router.put("/api/workouts/:id", (req, res) => {
   });
 });
 
-// router.post("/api/workouts", ({ body }, res) => {
-//   Workout.create(body)
-//     .then(dbWorkout => {
-//       res.json(dbWorkout);
-//     })
-//     .catch(err => {
-//       res.status(400).json(err);
-//     });
-// });
+router.post("/api/workouts", ({ body }, res) => {
+  Workout.create({body})
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
 
 module.exports = router;
