@@ -24,6 +24,7 @@ router.get("/exercise", (req, res) => {
       }
     )
     .then(dbWorkout => {
+      console.log(dbWorkout);
       res.json(dbWorkout);
       // res.redirect("./exercise")
     })
@@ -36,10 +37,10 @@ router.get("/exercise", (req, res) => {
 });
 
 router.put("/api/workouts/:id", (req, res) => {
-  // console.log(body);
+  console.log(req.body);
   if (req.params.id === "undefined"){
     createWorkout(req.body, res);
-  } else{
+  } else {
     Workout.updateOne(
       {
         _id: req.params.id
@@ -47,15 +48,16 @@ router.put("/api/workouts/:id", (req, res) => {
       {exercises: {$push: {body}}}
     )
     .then(dbWorkout => {
+      console.log(dbWorkout);
       res.json(dbWorkout);
     })
     .catch(err => {
       res.status(400).json(err);
-    });
+    })
   }
 });
 
-router.post("/api/workouts", ({ body }, res) => {
+router.post("/api/workouts", ({body}, res) => {
   // console.log(body);
   createWorkout(body, res);
 });
@@ -74,7 +76,7 @@ router.get("/api/workouts/range", (req, res) => {
 
 function createWorkout(data, res){
   console.log(data);
-  Workout.create(data)
+  Workout.create({exercises: [data]})
   .then(dbWorkout => {
     console.log(dbWorkout);
     res.json(dbWorkout);
