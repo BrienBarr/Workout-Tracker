@@ -4,21 +4,17 @@ const db = require("../models");
 
 router.get("/api/workouts", (req, res) => {
   db.Workout.aggregate([
-    { $addFields: { totalDuration: { $sum: "$exercises.duration" }} }
+    { $addFields: { totalDuration: { $sum: "$exercises.duration" } } },
+    { $sort: { day: -1 } },
+    { $limit: 1}
   ])
-  .then((data) =>{
-    console.log(data);
-    db.Workout.find({})
-    .sort({ day: -1 })
-    .limit(1)
-    .then(dbWorkout => {
-      res.json(dbWorkout);
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+  .then(dbWorkout => {
+    res.json(dbWorkout);
   })
+  .catch(err => {
+    res.status(400).json(err);
   });
+});
 
 router.put("/api/workouts/:id", (req, res) => {
   console.log(req.body);
